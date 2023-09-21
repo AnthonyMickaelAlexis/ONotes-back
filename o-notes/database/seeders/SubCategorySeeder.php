@@ -4,8 +4,9 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\SubCategory;
 
-class SubCategory extends Seeder
+class SubCategorySeeder extends Seeder
 {
     /**
      * Run the database seeds.
