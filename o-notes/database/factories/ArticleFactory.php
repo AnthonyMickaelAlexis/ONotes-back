@@ -21,7 +21,8 @@ class ArticleFactory extends Factory
         $content = fake()->paragraphs(3,true);
         return [
             'title' => fake()->sentence(1),
-            'subtitles' => Str::slug($title),
+            'subtitle' => fake()->sentence(2),
+            'slug' => Str::slug($title),
             'text_content' => $content,
             'file_content' => fake()->name,
             'banner' => fake()->imageUrl,

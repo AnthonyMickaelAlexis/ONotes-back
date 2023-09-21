@@ -20,7 +20,7 @@ return new class extends Migration
             $table->text("file_content");
             $table->string("banner");
             $table->integer("user_id");
-            $table->integer("category_id");
+            $table->integer("subcategory_id");
             $table->timestamps();
         });
     }
