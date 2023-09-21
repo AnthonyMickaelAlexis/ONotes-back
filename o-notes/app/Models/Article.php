@@ -16,6 +16,6 @@ class Article extends Model
         'text_content',
         'file_content',
         'banner',
-        'category_id',
+        'subcategory_id',
     ];
 }
