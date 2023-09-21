@@ -23,7 +23,7 @@ class UserFactory extends Factory
             'pseudo' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
-            'role' => integerValue(),
+            'role' => fake()->randomElement(['admin', 'user']),
             'password' => bcrypt(Str::random(10)),
             'remember_token' => Str::random(10),
         ];
