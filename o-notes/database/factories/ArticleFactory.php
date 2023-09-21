@@ -26,7 +26,7 @@ class ArticleFactory extends Factory
             'file_content' => fake()->name,
             'banner' => fake()->imageUrl,
             'user_id' => fake()->randomNumber(),
-            'category_id' => fake()->randomNumber(),
+            'subcategory_id' => fake()->randomNumber(),
             'created_at' => fake()->date(),
             'updated_at' => fake()->date(),
         ];
