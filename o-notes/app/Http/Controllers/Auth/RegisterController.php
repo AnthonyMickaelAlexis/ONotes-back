@@ -2,57 +2,35 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Http\Library\ApiHelpers;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
+
 class RegisterController extends Controller
 {
-    public function register(Request $request)
+    use ApiHelpers;
+
+    public function register(Request $request): \Illuminate\Http\JsonResponse
     {
-        try {
-            //Validated
-            $validateUser = Validator::make($request->all(),
-            [
-                'lastname' => 'required',
-                'firstname' => 'required',
-                'pseudo' => 'required',
-                'role' => 'nullable',
-                'avatar' => 'nullable',
-                'email' => 'required|email|unique:users,email',
-                'password' => 'required'
-            ]);
+        $validator = Validator::make($request->all(), $this->userValidatedRules());
+            if ($validator->passes()) {
+                // Create New Writer
+                $user = User::create([
+                    'lastname' => $request->lastname,
+                    'firstname' => $request->firstname,
+                    'pseudo' => $request->pseudo,
+                    'avatar' => $request->avatar,
+                    'email' => $request->email,
+                    'password' => Hash::make($request->password)
+                ]);
 
-            if($validateUser->fails()){
-                return response()->json([
-                    'status' => false,
-                    'message' => 'validation error',
-                    'errors' => $validateUser->errors()
-                ], 401);
+                $writerToken = $user->createToken('auth_token', ['user'])->plainTextToken;
+                return $this->onSuccess($writerToken, 'User Created With User Role');
             }
-
-            $user = User::create([
-                'lastname' => $request->lastname,
-                'firstname' => $request->firstname,
-                'pseudo' => $request->pseudo,
-                'avatar' => $request->avatar,
-                'email' => $request->email,
-                'password' => Hash::make($request->password)
-            ]);
-
-            return response()->json([
-                'status' => true,
-                'message' => 'User Created Successfully',
-                'token' => $user->createToken("API TOKEN")->plainTextToken
-            ], 200);
-
-        } catch (\Throwable $th) {
-            return response()->json([
-                'status' => false,
-                'message' => $th->getMessage()
-            ], 500);
-        }
+        return $this->onError(400, $validator->errors());
     }
 }
