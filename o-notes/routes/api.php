@@ -21,9 +21,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::group(['middleware' => 'auth:sanctum'], function(){
-
-    // add a new user with user scope
-    Route::post('users/writer', [ControllerExample::class, 'createWriter']);
+    
 });
 
 Route::post('/register', [RegisterController::class, 'register']);
