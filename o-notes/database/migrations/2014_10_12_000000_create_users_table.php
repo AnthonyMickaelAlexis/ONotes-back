@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('lastname');
             $table->string('firstname');
             $table->string('pseudo')->unique();
-            $table->string('role')->default('guest');
+            $table->string('role')->default('user');
             $table->string('avatar')->nullable();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
