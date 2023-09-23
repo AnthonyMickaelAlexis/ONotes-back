@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Library\ApiHelpers;
 use App\Models\Article;
-use Illuminate\Validation\Validator;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class ArticleController extends Controller
 {
@@ -30,8 +31,8 @@ class ArticleController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->user());
         $user = $request->user();
+        // dd($user->id);
 
         if($this->IsAdmin($user) || $this->isUser($user)) {
             $validator = Validator::make($request->all(), $this->postValidationRules());
@@ -40,17 +41,18 @@ class ArticleController extends Controller
                 $article = Article::create([
                     'title' => $request->title,
                     'subtitle' => $request->subtitle,
+                    'slug' => Str::slug($request->title),
                     'text_content' => $request->text_content,
                     'file_content' => $request->file_content,
                     'banner' => $request->banner,
-                    'user_id' => $request->user_id,
+                    'user_id' => $request->user()->id,
                     'subcategory_id' => $request->subcategory_id,
                 ]);
                 return $this->onSuccess($article, 'Article Created');
             }
             return $this->onError(400, $validator->errors());
         }
-
+        return $this->onError(401, 'Unauthorized');
     }
 
     /**

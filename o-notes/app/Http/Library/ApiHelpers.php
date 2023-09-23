@@ -46,11 +46,10 @@ trait ApiHelpers
         return [
             'title' => 'required|string',
             'subtitle' => 'string',
-            'text_content' => 'required|text',
-            'file_content' => 'text',
+            'text_content' => 'required|string',
+            'file_content' => 'string',
             'banner' => 'string',
             'subcategory_id' => 'required|integer',
-            'user_id' => 'required|integer',
         ];
     }
 

@@ -10,7 +10,6 @@ class AdminMiddleware
 {
     public function handle(Request $request, Closure $next)
     {
-        dd($request->user());
         $user = DB::table('users')->select('role')->where('id',1)->first();
 
         if ($user && (int)$user->role === 1){

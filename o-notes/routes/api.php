@@ -21,11 +21,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::group(['middleware' => 'permission'], function(){
-
+Route::group(['middleware' => 'auth:sanctum'], function(){
+    Route::post('/article', [ArticleController::class, 'store']);
 });
 
-Route::post('/article', [ArticleController::class, 'store']);
 Route::get('/articles', [ArticleController::class, 'index']);
 
 Route::post('/register', [RegisterController::class, 'register']);
