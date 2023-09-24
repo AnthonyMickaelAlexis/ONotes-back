@@ -14,14 +14,9 @@ class ArticleSeeder extends Seeder
      */
     public function run(): void
     {
-
-
-        $user = User::factory()->create();
-        Article::factory()->count(3)->for($user)->create();
-        // $users = User::factory()->count(10)->create();
-        // foreach ($users as $user) {
-        //     Article::factory()->count(3)->for($user)->create();
-        // }
-        // Article::factory()->count(3)->forUser()->create();
+         $users = User::factory()->count(10)->create();
+         foreach ($users as $user) {
+            Article::factory()->count(random_int(3, 8))->for($user)->create();
+         }
     }
 }
