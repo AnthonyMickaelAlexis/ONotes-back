@@ -32,7 +32,6 @@ class ArticleController extends Controller
     public function store(Request $request)
     {
         $user = $request->user();
-        // dd($user->id);
 
         if($this->IsAdmin($user) || $this->isUser($user)) {
             $validator = Validator::make($request->all(), $this->postValidationRules());
