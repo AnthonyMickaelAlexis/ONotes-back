@@ -57,9 +57,14 @@ class ArticleController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Request $request, $id)
     {
-        //
+        $article = Article::find($id);
+        if (!empty($article)) {
+            return $this->onSuccess($article, 'Article Found');
+        }
+
+        return $this->onError(404, 'Article Not Found');
     }
 
     /**
@@ -67,14 +72,48 @@ class ArticleController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $user = $request->user();
+
+        if($this->IsAdmin($user) || $this->isUser($user)) {
+            $article = Article::find($id);
+            if (!empty($article)) {
+                $validator = Validator::make($request->all(), $this->postValidationRules());
+
+                if ($validator->passes()) {
+                    $article->update([
+                        'title' => $request->title,
+                        'subtitle' => $request->subtitle,
+                        'slug' => Str::slug($request->title),
+                        'text_content' => $request->text_content,
+                        'file_content' => $request->file_content,
+                        'banner' => $request->banner,
+                        'user_id' => $request->user()->id,
+                        'subcategory_id' => $request->subcategory_id,
+                    ]);
+                    return $this->onSuccess($article, 'Article Updated');
+                }
+                return $this->onError(400, $validator->errors());
+            }
+            return $this->onError(404, 'Article Not Found');
+        }
+        return $this->onError(401, 'Unauthorized');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request, string $id)
     {
-        //
+        $user = $request->user();
+
+        if($this->IsAdmin($user) || $this->isUser($user)) {
+            $article = Article::find($id);
+            if (!empty($article)) {
+                $article->delete();
+                return $this->onSuccess(null, 'Article Deleted');
+            }
+            return $this->onError(404, 'Article Not Found');
+        }
+        return $this->onError(401, 'Unauthorized');
     }
 }

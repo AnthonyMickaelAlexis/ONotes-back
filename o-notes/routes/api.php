@@ -17,17 +17,15 @@ use App\Http\Controllers\ArticleController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
 Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('/article', [ArticleController::class, 'store']);
+    Route::put('/article/{id}', [ArticleController::class, 'update']);
+    Route::delete('/article/{id}', [ArticleController::class, 'destroy']);
 });
 
 Route::get('/articles', [ArticleController::class, 'index']);
+Route::get('/article/{id}', [ArticleController::class, 'show']);
 
 Route::post('/register', [RegisterController::class, 'register']);
-Route::post('/login', [LoginController::class, 'login']);
-
+Route::post('/login', [LoginController::class, 'login'])->name('login');
 
