@@ -57,7 +57,7 @@ class ArticleController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Request $request, $id)
+    public function show($id)
     {
         $article = Article::find($id);
         if (!empty($article)) {
