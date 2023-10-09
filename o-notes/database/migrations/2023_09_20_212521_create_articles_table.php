@@ -21,7 +21,7 @@ return new class extends Migration
             $table->text("file_content")->nullable();
             $table->string("banner")->nullable();
             $table->foreignId('user_id')->constrained(table: 'users', indexName: 'articles_user_id');
-            $table->integer("subcategory_id");
+            $table->foreignId('subcategory_id')->constrained(table: 'sub_categories', indexName: 'articles_subcategory_id');
             $table->timestamps();
         });
     }

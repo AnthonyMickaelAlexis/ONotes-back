@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\SubCategory;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -27,7 +28,9 @@ class ArticleFactory extends Factory
             'file_content' => fake()->name,
             'banner' => fake()->imageUrl,
             'user_id' => fake()->randomNumber(),
-            'subcategory_id' => fake()->randomNumber(),
+            'subcategory_id' => function () {
+                return SubCategory::factory()->create()->id;
+            },
             'created_at' => fake()->date(),
             'updated_at' => fake()->date(),
         ];
