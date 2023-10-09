@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,11 +16,11 @@ return new class extends Migration
             $table->id();
             $table->string("title", 100);
             $table->string("subtitle");
-            $table->string("slug");
+            $table->string("slug")->default('');
             $table->text("text_content");
-            $table->text("file_content");
-            $table->string("banner");
-            $table->integer("user_id");
+            $table->text("file_content")->nullable();
+            $table->string("banner")->nullable();
+            $table->foreignId('user_id')->constrained(table: 'users', indexName: 'articles_user_id');
             $table->integer("subcategory_id");
             $table->timestamps();
         });
