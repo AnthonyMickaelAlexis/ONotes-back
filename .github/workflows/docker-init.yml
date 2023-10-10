@@ -1,0 +1,27 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "feat/012-hebergement-du-back" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Docker Login
+      uses: docker/login-action@v3.0.0
+      with:
+        registry: registry-kin.hyver.ingeeniex.com
+        # Username used to log against the Docker registry
+        username: ${{ secrets.username }}
+        # Password or personal access token used to log against the Docker registry
+        password: ${{ secrets.password }}
+      # Specifies whether the given registry is ECR (auto, true or false)
+    - name: Build the Docker image
+      run: cd o-notes; docker build . --file ./docker/8.2/Dockerfile --tag registry-kin.hyver.ingeeniex.com/onotes-back:$(date +%s)
+    - name: Push to registry   
+      run: docker push registry-kin.hyver.ingeeniex.com/onotes-back:$(date +%s)
