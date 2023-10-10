@@ -19,8 +19,14 @@ class LoginController extends Controller
 
         $user = User::where('email', $request['email'])->firstOrFail();
 
+        if(Auth::check() && Auth::user()->role === 'admin') {
+            $token = $user->createToken('auth_token', ['admin'])->plainTextToken;
+            return response()->json([
+                'access_token' => $token,
+                'token_type' => 'Bearer',
+            ]);
+        }
         $token = $user->createToken('auth_token', ['user'])->plainTextToken;
-
         return response()->json([
             'access_token' => $token,
             'token_type' => 'Bearer',
