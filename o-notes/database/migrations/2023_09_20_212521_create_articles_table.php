@@ -20,8 +20,8 @@ return new class extends Migration
             $table->text("text_content");
             $table->text("file_content")->nullable();
             $table->string("banner")->nullable();
-            $table->foreignId('user_id')->constrained(table: 'users', indexName: 'articles_user_id');
-            $table->integer("subcategory_id");
+            $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('subcategory_id')->constrained('sub_categories');
             $table->timestamps();
         });
     }

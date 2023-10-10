@@ -53,6 +53,27 @@ trait ApiHelpers
         ];
     }
 
+    protected function categoryValidationRules(): array
+    {
+        return [
+            'name' => 'required|string',
+        ];
+    }
+
+    protected function subcategoryValidationRules($categoryId): array
+    {
+        if (!empty($categoryId)) {
+            return [
+                'name' => 'required|string',
+                'category_id' => 'integer',
+            ];
+        }
+        return [
+            'name' => 'required|string',
+            'category_id' => 'required|integer',
+        ];
+    }
+
     protected function userValidatedRules(): array
     {
         return [
