@@ -14,7 +14,7 @@
         - Open the root folder of this git repository in a terminal and print in `wsl`
         - Once your in your subsystem linux
 
-## Installation of the project
+## Install O'Notes api
 - go to `o-notes` root folder, which is the root of our application
 - copy the following command in your terminal : 
 ``` bash
