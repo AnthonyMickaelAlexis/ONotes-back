@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Library\ApiHelpers;
-use App\Models\Article;
 use App\Models\SubCategory;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -47,7 +46,6 @@ class SubCategoryController extends Controller
         return $this->onError(400,$validator->errors());
        }
        return $this->onError(401, 'Unauthorized');
-
     }
 
     /**

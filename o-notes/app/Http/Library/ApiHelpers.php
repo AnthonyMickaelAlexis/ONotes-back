@@ -18,7 +18,7 @@ trait ApiHelpers
     protected function isUser($user): bool
     {
         if (!empty($user)) {
-            return $user->tokenCan('user');
+            return $user->tokenCan('user') || $user->tokenCan('admin');
         }
 
         return false;
@@ -71,6 +71,13 @@ trait ApiHelpers
         return [
             'name' => 'required|string',
             'category_id' => 'required|integer',
+        ];
+    }
+
+    protected function tagValidationRules(): array
+    {
+        return [
+            'name' => 'required|string',
         ];
     }
 

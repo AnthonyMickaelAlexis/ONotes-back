@@ -21,8 +21,8 @@ class CategoryFactory extends Factory
         return [
             'name' => $name,
             'slug' => Str::slug($name),
-            'created_at' => fake()->date(),
-            'updated_at' => fake()->date(),
+            'created_at' => '2021-09-19 05:34:11',
+            'updated_at' => '2021-09-19 05:34:11',
         ];
     }
 }
