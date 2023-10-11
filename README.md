@@ -13,6 +13,7 @@
         - `wsl -l -v` verify wich distribution your using. If the wrong distribution is used by wsl2, set by default the desired one : `wsl --setdefault <DistributionName>`
         - Open the root folder of this git repository in a terminal and print in `wsl`
         - Once your in your subsystem linux
+        - Launch Docker Desktop
 
 ## Install O'Notes api
 - go to `o-notes` root folder, which is the root of our application
