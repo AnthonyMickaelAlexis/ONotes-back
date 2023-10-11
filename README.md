@@ -4,7 +4,7 @@
 ### Linux
 - You need to have docker-compose installed on your system : https://docs.docker.com/compose/install/linux/#install-using-the-repository
 
-## Windows
+### Windows
 - You need to install Docker Desktop : https://www.docker.com/products/docker-desktop/
 - To run your docker environnement you'll have to get WSL2 : https://learn.microsoft.com/en-us/windows/wsl/install
     - Commands : 
