@@ -16,6 +16,8 @@ class Tag extends Model
         'name',
         'slug',
         'user_id',
+        'logo',
+        'color',
     ];
 
     public function articles(): BelongsToMany

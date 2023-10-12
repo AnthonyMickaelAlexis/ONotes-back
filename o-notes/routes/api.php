@@ -49,6 +49,7 @@ Route::get('/subcategories', [SubCategoryController::class, 'index']);
 Route::get('/subcategory/{id}', [SubCategoryController::class, 'show']);
 
 Route::get('/tags', [TagController::class, 'index']);
+Route::get('/tags/homepage', [TagController::class, 'homepage']);
 Route::get('/tag/{id}', [TagController::class, 'show']);
 
 Route::post('/register', [RegisterController::class, 'register']);

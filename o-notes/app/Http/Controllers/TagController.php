@@ -28,6 +28,19 @@ class TagController extends Controller
     }
 
     /**
+     * Récupère 25 tags pour la homepage.
+     */
+    public function homepage()
+    {
+        $tags = Tag::orderBy('created_at', 'desc')->take(25)->get();
+
+        if (!empty($tags)) {
+            return $this->onSuccess($tags, 'All Tags');
+        }
+        return $this->onError(404, 'No Tags Found');
+    }
+
+    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
