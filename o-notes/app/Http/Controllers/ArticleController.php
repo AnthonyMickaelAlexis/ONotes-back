@@ -17,13 +17,27 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        $articles = Article::all();
+        $articles = Article::with('user:id,pseudo,avatar')->orderBy('created_at', 'desc')->get();
+        
         if (!empty($articles)) {
             return $this->onSuccess($articles, 'All Articles');
         }
 
         return $this->onError(404, 'No Articles Found');
 
+    }
+
+    /**
+     * Récupère les articles pour la homepage avec les utilisateurs qui les ont écrits.
+     */
+    public function homepage()
+    {
+        $articles = Article::with('user:id,pseudo,avatar')->orderBy('created_at', 'desc')->take(10)->get();
+
+        if (!empty($articles)) {
+            return $this->onSuccess($articles, 'All Articles');
+        }
+        return $this->onError(404, 'No Articles Found');
     }
 
     /**

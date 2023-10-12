@@ -39,6 +39,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
 });
 
 Route::get('/articles', [ArticleController::class, 'index']);
+Route::get('/articles/homepage', [ArticleController::class, 'homepage']);
 Route::get('/article/{id}', [ArticleController::class, 'show']);
 
 Route::get('/categories', [CategoryController::class, 'index']);
@@ -52,4 +53,5 @@ Route::get('/tag/{id}', [TagController::class, 'show']);
 
 Route::post('/register', [RegisterController::class, 'register']);
 Route::post('/login', [LoginController::class, 'login'])->name('login');
+
 
