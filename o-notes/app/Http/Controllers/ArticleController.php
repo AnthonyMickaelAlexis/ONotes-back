@@ -17,7 +17,8 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        $articles = Article::with('user')->orderBy('created_at', 'desc')->get();
+        $articles = Article::with('user:id,pseudo,avatar')->orderBy('created_at', 'desc')->get();
+        
         if (!empty($articles)) {
             return $this->onSuccess($articles, 'All Articles');
         }
@@ -31,7 +32,7 @@ class ArticleController extends Controller
      */
     public function homepage()
     {
-        $articles = Article::with('user')->orderBy('created_at', 'desc')->take(10)->get();
+        $articles = Article::with('user:id,pseudo,avatar')->orderBy('created_at', 'desc')->take(10)->get();
 
         if (!empty($articles)) {
             return $this->onSuccess($articles, 'All Articles');
