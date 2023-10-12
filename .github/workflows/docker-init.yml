@@ -33,3 +33,10 @@ jobs:
       run: cd o-notes; docker build . --file ./docker/8.2/Dockerfile --tag registry-kin.hyver.ingeeniex.com/onotes-back:${{ steps.vars.outputs.sha_short }}
     - name: Push to registry   
       run: docker push registry-kin.hyver.ingeeniex.com/onotes-back:${{ steps.vars.outputs.sha_short }}
+    - name: Deploy to CapRover
+      uses: caprover/deploy-from-github@v1.1.2
+      with: 
+        server: ${{ secrets.CAPROVER_SERVER }}
+        app: ${{ secrets.CAPROVER_APP }}
+        token: ${{ secrets.CAPROVER_TOKEN }}
+        image: registry-kin.hyver.ingeeniex.com/onotes-back:${{ steps.vars.outputs.sha_short }}
