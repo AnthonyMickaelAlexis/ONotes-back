@@ -25,6 +25,8 @@ class TagFactory extends Factory
             "user_id" => function () {
                 return User::factory()->create()->id;
             },
+            "logo" => fake()->imageUrl(640, 480, 'animals', true),
+            "color" => fake()->hexColor(),
         ];
     }
 }
