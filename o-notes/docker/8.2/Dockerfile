@@ -55,6 +55,8 @@ COPY ./docker/8.2/php.ini /etc/php/8.2/cli/conf.d/99-sail.ini
 COPY . /var/www/html/
 RUN chmod +x /usr/local/bin/start-container
 
+RUN composer install --no-interaction && npm install
+
 EXPOSE 8000
 
 ENTRYPOINT ["start-container"]

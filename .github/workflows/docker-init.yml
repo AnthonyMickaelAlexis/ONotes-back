@@ -2,7 +2,10 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ "feat/012-hebergement-du-back" ]
+    branches:
+      - main
+      - 'feat/012-hebergement-du-back'
+      - development
 
 jobs:
 
