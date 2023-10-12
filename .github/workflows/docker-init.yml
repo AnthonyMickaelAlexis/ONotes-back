@@ -21,7 +21,12 @@ jobs:
         # Password or personal access token used to log against the Docker registry
         password: ${{ secrets.password }}
       # Specifies whether the given registry is ECR (auto, true or false)
+    - name: Set outputs
+      id: vars
+      run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+    - name: Check outputs
+      run: echo ${{ steps.vars.outputs.sha_short }}
     - name: Build the Docker image
-      run: cd o-notes; docker build . --file ./docker/8.2/Dockerfile --tag registry-kin.hyver.ingeeniex.com/onotes-back:$(date +%s)
+      run: cd o-notes; docker build . --file ./docker/8.2/Dockerfile --tag registry-kin.hyver.ingeeniex.com/onotes-back:${{ steps.vars.outputs.sha_short }}
     - name: Push to registry   
-      run: docker push registry-kin.hyver.ingeeniex.com/onotes-back:$(date +%s)
+      run: docker push registry-kin.hyver.ingeeniex.com/onotes-back:${{ steps.vars.outputs.sha_short }}
