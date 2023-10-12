@@ -17,13 +17,26 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        $articles = Article::all();
+        $articles = Article::with('user:id,pseudo,avatar')->with('tag')->get();
+
+            if (!empty($articles)) {
+                return $this->onSuccess($articles, 'All Articles');
+            }
+            return $this->onError(404, 'No Articles Found');
+
+    }
+
+    /**
+     * Récupère les articles pour la homepage avec les utilisateurs qui les ont écrits.
+     */
+    public function homepage()
+    {
+        $articles = Article::with('user:id,pseudo,avatar')->with('tag')->orderBy("created_at", "desc")->take(10)->get();
+
         if (!empty($articles)) {
             return $this->onSuccess($articles, 'All Articles');
         }
-
         return $this->onError(404, 'No Articles Found');
-
     }
 
     /**
@@ -59,9 +72,10 @@ class ArticleController extends Controller
      */
     public function show(string $id)
     {
-        $article = Article::find($id);
-        if (!empty($article)) {
-            return $this->onSuccess($article, 'Article Found');
+        $articles = Article::with('user:id,pseudo,avatar')->with('tag')->find($id);
+
+        if (!empty($articles)) {
+            return $this->onSuccess($articles, 'Article Found');
         }
 
         return $this->onError(404, 'Article Not Found');

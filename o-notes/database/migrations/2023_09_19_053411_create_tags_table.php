@@ -15,6 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string("name");
             $table->string("slug");
+            $table->string("logo");
+            $table->string("color");
+            $table->foreignId('user_id')->constrained('users');
             $table->timestamps();
         });
     }

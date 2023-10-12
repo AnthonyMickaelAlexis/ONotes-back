@@ -2,7 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Models\Article;
 use App\Models\SubCategory;
+use App\Models\Tag;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -34,5 +36,12 @@ class ArticleFactory extends Factory
             'created_at' => fake()->date(),
             'updated_at' => fake()->date(),
         ];
+    }
+
+    public function configure(): ArticleFactory
+    {
+        return $this->afterCreating(function (Article $article) {
+            $article->tag()->attach(Tag::factory()->count(3)->create());
+        });
     }
 }

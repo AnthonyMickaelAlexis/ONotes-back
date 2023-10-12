@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Article extends Model
 {
@@ -29,5 +30,10 @@ class Article extends Model
     public function subcategory(): BelongsTo
     {
         return $this->belongsTo(SubCategory::class);
+    }
+
+    public function tag(): BelongsToMany
+    {
+        return $this->belongsToMany(Tag::class);
     }
 }
