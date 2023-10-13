@@ -21,7 +21,7 @@ class UserController extends Controller
         $user = auth()->user();
 
         if ($user) {
-            $articles = Article::orderBy('created_at', 'desc')->where('user_id', $user->id)->take(3)->get();
+            $articles = Article::orderBy('created_at', 'desc')->where('user_id', $user->id)->take(20)->get();
             $tags = Tag::orderBy('created_at', 'desc')->where('user_id', $user->id)->take(20)->get();
             return $this->onSuccess([$user, $articles, $tags], 'User Dashboard');
         }
