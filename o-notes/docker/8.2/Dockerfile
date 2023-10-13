@@ -2,7 +2,10 @@ FROM ubuntu:22.04
 
 LABEL maintainer="Taylor Otwell"
 
+<<<<<<< HEAD
 ARG WWWGROUP
+=======
+>>>>>>> 294fa851067788435265cfb618980c8c325c3a64
 ARG NODE_VERSION=18
 ARG POSTGRES_VERSION=15
 
@@ -48,6 +51,7 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+<<<<<<< HEAD
 RUN setcap "cap_net_bind_service=+ep" /usr/bin/php8.2
 
 RUN groupadd --force -g $WWWGROUP sail
@@ -58,6 +62,18 @@ COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY php.ini /etc/php/8.2/cli/conf.d/99-sail.ini
 RUN chmod +x /usr/local/bin/start-container
 
+=======
+
+
+COPY ./docker/8.2/start-container /usr/local/bin/start-container
+COPY ./docker/8.2/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY ./docker/8.2/php.ini /etc/php/8.2/cli/conf.d/99-sail.ini
+COPY . /var/www/html/
+RUN chmod +x /usr/local/bin/start-container
+
+RUN composer install --no-interaction && npm install
+
+>>>>>>> 294fa851067788435265cfb618980c8c325c3a64
 EXPOSE 8000
 
 ENTRYPOINT ["start-container"]
