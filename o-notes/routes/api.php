@@ -8,6 +8,7 @@ use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\SubCategoryController;
 use App\Http\Controllers\TagController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,6 +37,10 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('/tag', [TagController::class, 'store']);
     Route::put('/tag/{id}', [TagController::class, 'update']);
     Route::delete('/tag/{id}', [TagController::class, 'destroy']);
+
+    Route::get('/dashboard', [UserController::class, 'dashboard']);
+    Route::get('/dashboard/mes-tags', [UserController::class, 'tags']);
+    Route::get('/dashboard/mes-articles', [UserController::class, 'articles']);
 });
 
 Route::get('/articles', [ArticleController::class, 'index']);
