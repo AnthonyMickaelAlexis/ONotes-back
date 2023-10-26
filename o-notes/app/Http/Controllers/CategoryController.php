@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\SubCategory;
 use Illuminate\Http\Request;
 use App\Http\Library\ApiHelpers;
 use App\Models\Article;
@@ -57,9 +58,10 @@ class CategoryController extends Controller
     {
 
         $category = Category::find($id);
+        $subcategory = SubCategory::where('category_id', $id)->get();
 
         if (!empty($category)) {
-            return $this->onSuccess($category, 'Category Found');
+            return $this->onSuccess([$category, $subcategory], 'Category Found');
         }
 
         return $this->onError(404, 'Category Not Found');
