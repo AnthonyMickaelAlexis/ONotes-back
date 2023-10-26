@@ -15,9 +15,12 @@ class ArticleController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $articles = Article::with('user:id,pseudo,avatar')->with('tag')->get();
+        $limit = $request->input('limit');
+        $orderBy = $request->input('orderBy');
+
+        $articles = Article::with('user:id,pseudo,avatar')->with('tag')->limit($limit)->orderBy($orderBy)->get();
 
             if (!empty($articles)) {
                 return $this->onSuccess($articles, 'All Articles');
