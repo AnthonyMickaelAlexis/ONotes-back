@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Tag;
 use Illuminate\Http\Request;
 use App\Http\Library\ApiHelpers;
 use App\Models\Article;
@@ -60,6 +61,30 @@ class ArticleController extends Controller
                     'user_id' => $request->user()->id,
                     'subcategory_id' => $request->subcategory_id,
                 ]);
+
+                // Récupérer les tags sélectionnés par l'utilisateur
+                $tags = $request->input('tags');
+
+                // Synchroniser les tags avec l'article
+                $article->tag()->sync($tags);
+
+                // Vérifier si un nouveau tag a été créé
+                $newTag = $request->input('newTag');
+
+                if ($newTag) {
+                    // Créer un nouveau tag
+                    $tag = Tag::create([
+                        'name' => $newTag,
+                        'slug' => Str::slug($newTag),
+                        'user_id' => $request->user()->id,
+                        'logo' => 'https://picsum.photos/200/300',
+                        'color' => '#000000',
+                        ]);
+
+                    // Synchroniser le nouveau tag avec l'article
+                    $article->tag()->attach($tag->id);
+                }
+
                 return $this->onSuccess($article, 'Article Created');
             }
             return $this->onError(400, $validator->errors());
@@ -86,6 +111,8 @@ class ArticleController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        // TODO : Mettre à jour les tags
+
         $user = $request->user();
 
         if($this->IsAdmin($user) || $this->isUser($user)) {
