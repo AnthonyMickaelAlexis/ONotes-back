@@ -17,15 +17,20 @@ class ArticleController extends Controller
      */
     public function index(Request $request)
     {
-        $limit = $request->input('limit');
-        $orderBy = $request->input('orderBy');
+        $limit = trim($request->input('limit', null));
+        $orderBy = trim($request->input('orderBy', 'created_at'));
 
-        $articles = Article::with('user:id,pseudo,avatar')->with('tag')->limit($limit)->orderBy($orderBy)->get();
+        // Vérification qu'une limite est défini et si c'est bien un int
+        if ($limit && !is_numeric($limit)){
+            return $this->onError(404, 'Limit invalid');
+        }
 
-            if (!empty($articles)) {
-                return $this->onSuccess($articles, 'All Articles');
-            }
-            return $this->onError(404, 'No Articles Found');
+        $articles = Article::with('user:id,pseudo,avatar')->with('tag')->limit($limit)->orderBy($orderBy, 'DESC')->get();
+
+        if (!empty($articles)) {
+            return $this->onSuccess($articles, 'All Articles');
+        }
+        return $this->onError(404, 'No Articles Found');
 
     }
 

@@ -43,7 +43,11 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::get('/dashboard/mes-articles', [UserController::class, 'articles']);
 });
 
-Route::get('/articles', [ArticleController::class, 'index']);
+Route::get('/articles', [
+    ArticleController::class,
+    'index',
+    'middleware' => ['trim', 'strip_tags', 'query_params'],
+    ]);
 Route::get('/articles/homepage', [ArticleController::class, 'homepage']);
 Route::get('/article/{id}', [ArticleController::class, 'show']);
 
