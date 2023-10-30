@@ -74,11 +74,12 @@ class ArticleController extends Controller
                 if ($newTag) {
                     // Créer un nouveau tag
                     $tag = Tag::create([
-                        'name' => $newTag,
-                        'slug' => Str::slug($newTag),
+                        'name' => $newTag['name'],
+                        'slug' => Str::slug($newTag['name']),
                         'user_id' => $request->user()->id,
-                        'logo' => 'https://picsum.photos/200/300',
-                        'color' => '#000000',
+                        'logo' => $newTag['logo'],
+                        'color' => $newTag['color'],
+                        'bg_color' => $newTag['bg_color'],
                         ]);
 
                     // Synchroniser le nouveau tag avec l'article
@@ -149,11 +150,12 @@ class ArticleController extends Controller
             if ($newTag) {
                 // Créer un nouveau tag
                 $tag = Tag::create([
-                    'name' => $newTag,
-                    'slug' => Str::slug($newTag),
+                    'name' => $newTag['name'],
+                    'slug' => Str::slug($newTag['name']),
                     'user_id' => $request->user()->id,
-                    'logo' => 'https://picsum.photos/200/300',
-                    'color' => '#000000',
+                    'logo' => $newTag['logo'],
+                    'color' => $newTag['color'],
+                    'bg_color' => $newTag['bg_color'],
                 ]);
 
                 // Synchroniser le nouveau tag avec l'article

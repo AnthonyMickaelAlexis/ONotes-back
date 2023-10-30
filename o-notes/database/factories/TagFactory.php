@@ -27,6 +27,7 @@ class TagFactory extends Factory
             },
             "logo" => fake()->imageUrl(640, 480, 'animals', true),
             "color" => fake()->hexColor(),
+            "bg_color" => fake()->hexColor(),
         ];
     }
 }
