@@ -63,13 +63,13 @@ class ArticleController extends Controller
                 ]);
 
                 // Récupérer les tags sélectionnés par l'utilisateur
-                $tags = $request->input('tags');
+                $tags = $request->get('tags');
 
                 // Synchroniser les tags avec l'article
                 $article->tag()->sync($tags);
 
                 // Vérifier si un nouveau tag a été créé
-                $newTags = $request->input('newTags');
+                $newTags = $request->get('newTags');
                 if ($newTags) {
                     foreach ($newTags as $newTag) {
                             // Créer un nouveau tag
@@ -139,12 +139,12 @@ class ArticleController extends Controller
             ]);
 
             // Récupérer les tags sélectionnés par l'utilisateur
-            $tags = $request->input('tags');
+            $tags = $request->get('tags');
 
             // Synchroniser les tags avec l'article
             $article->tag()->sync($tags);
 
-            $newTags = $request->input('newTags');
+            $newTags = $request->get('newTags');
             if ($newTags) {
                 foreach ($newTags as $newTag) {
                     // Créer un nouveau tag
