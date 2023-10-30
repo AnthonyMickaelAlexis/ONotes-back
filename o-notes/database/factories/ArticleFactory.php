@@ -33,6 +33,7 @@ class ArticleFactory extends Factory
             'subcategory_id' => function () {
                 return SubCategory::factory()->create()->id;
             },
+            "status" => fake()->randomElement(['draft', 'published']),
             'created_at' => fake()->date(),
             'updated_at' => fake()->date(),
         ];

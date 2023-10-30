@@ -18,6 +18,7 @@ class Article extends Model
         'text_content',
         'file_content',
         'banner',
+        'status',
         'user_id',
         'subcategory_id',
     ];
