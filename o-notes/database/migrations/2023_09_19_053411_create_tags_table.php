@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string("slug");
             $table->string("logo");
             $table->string("color");
+            $table->string("bg_color");
             $table->foreignId('user_id')->constrained('users');
             $table->timestamps();
         });
