@@ -109,35 +109,64 @@ class ArticleController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $articleId)
     {
-        // TODO : Mettre à jour les tags
-
         $user = $request->user();
 
-        if($this->IsAdmin($user) || $this->isUser($user)) {
-            $article = Article::find($id);
-            if (!empty($article)) {
-                $validator = Validator::make($request->all(), $this->postValidationRules());
-
-                if ($validator->passes()) {
-                    $article->update([
-                        'title' => $request->title,
-                        'subtitle' => $request->subtitle,
-                        'slug' => Str::slug($request->title),
-                        'text_content' => $request->text_content,
-                        'file_content' => $request->file_content,
-                        'banner' => $request->banner,
-                        'user_id' => $request->user()->id,
-                        'subcategory_id' => $request->subcategory_id,
-                    ]);
-                    return $this->onSuccess($article, 'Article Updated');
-                }
-                return $this->onError(400, $validator->errors());
-            }
-            return $this->onError(404, 'Article Not Found');
+        // Vérifier si l'utilisateur est autorisé à éditer l'article
+        if (!($this->IsAdmin($user) || $this->isUser($user))) {
+            return $this->onError(401, 'Unauthorized');
         }
-        return $this->onError(401, 'Unauthorized');
+
+        // Récupérer l'article à éditer
+        $article = Article::findOrFail($articleId);
+
+        // Valider les données de la requête
+        $validator = Validator::make($request->all(), $this->postValidationRules());
+
+        if ($validator->passes()) {
+            // Mettre à jour les données de l'article
+            $article->update([
+                'title' => $request->title,
+                'subtitle' => $request->subtitle,
+                'slug' => Str::slug($request->title),
+                'text_content' => $request->text_content,
+                'file_content' => $request->file_content,
+                'banner' => $request->banner,
+                'subcategory_id' => $request->subcategory_id,
+                'tags' => $request->tags,
+            ]);
+
+            // Récupérer les tags sélectionnés par l'utilisateur
+            $tags = $request->input('tags');
+
+            // Synchroniser les tags avec l'article
+            $article->tag()->sync($tags);
+
+            // Vérifier si un nouveau tag a été créé
+            $newTag = $request->input('newTag');
+
+            if ($newTag) {
+                // Créer un nouveau tag
+                $tag = Tag::create([
+                    'name' => $newTag,
+                    'slug' => Str::slug($newTag),
+                    'user_id' => $request->user()->id,
+                    'logo' => 'https://picsum.photos/200/300',
+                    'color' => '#000000',
+                ]);
+
+                // Synchroniser le nouveau tag avec l'article
+                $article->tag()->attach($tag->id);
+            }
+
+            // Enregistrer les modifications
+            $article->save();
+
+            return $this->onSuccess([$article, $newTag], 'Article Updated');
+        }
+
+        return $this->onError(400, $validator->errors());
     }
 
     /**
