@@ -18,21 +18,7 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        $articles = Article::with('user:id,pseudo,avatar')->with('tag')->get();
-
-            if (!empty($articles)) {
-                return $this->onSuccess($articles, 'All Articles');
-            }
-            return $this->onError(404, 'No Articles Found');
-
-    }
-
-    /**
-     * Récupère les articles pour la homepage avec les utilisateurs qui les ont écrits.
-     */
-    public function homepage()
-    {
-        $articles = Article::with('user:id,pseudo,avatar')->with('tag')->orderBy("created_at", "desc")->take(10)->get();
+        $articles = Article::with('user:id,pseudo,avatar')->with('tag')->where('status', 'published')->get();
 
         if (!empty($articles)) {
             return $this->onSuccess($articles, 'All Articles');

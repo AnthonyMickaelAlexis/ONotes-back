@@ -35,7 +35,7 @@ class UserController extends Controller
     {
         $user = auth()->user();
         if ($user) {
-            $articles = Article::orderBy('created_at', 'desc')->where('user_id', $user->id)->get();
+            $articles = Article::orderBy('created_at', 'desc')->where('user_id', $user->id)->with('tag')->get();
             return $this->onSuccess([$user, $articles], 'User Dashboard');
         }
         return $this->onError(400, 'User Not Found');
@@ -48,7 +48,15 @@ class UserController extends Controller
         $user = auth()->user();
 
         if ($user) {
+            //Réupère les tags de l'utilisateur
             $tags = Tag::orderBy('created_at', 'desc')->where('user_id', $user->id)->get();
+
+            //Récupère les articles de chaque tag
+            foreach ($tags as $tag) {
+                $tag->article = Article::whereHas('tag', function ($query) use ($tag) {
+                    $query->where('tag_id', $tag->id);
+                })->get();
+            }
             return $this->onSuccess([$user, $tags], 'User Dashboard');
         }
 
