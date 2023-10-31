@@ -69,6 +69,7 @@ class ArticleController extends Controller
                     'banner' => $request->banner,
                     'user_id' => $request->user()->id,
                     'subcategory_id' => $request->subcategory_id,
+                    'status' => $request->status,
                 ]);
 
                 // Récupérer les tags sélectionnés par l'utilisateur
@@ -146,6 +147,7 @@ class ArticleController extends Controller
                 'banner' => $request->banner,
                 'subcategory_id' => $request->subcategory_id,
                 'tags' => $request->tags,
+                'status' => $request->status,
             ]);
 
             // Récupérer les tags sélectionnés par l'utilisateur

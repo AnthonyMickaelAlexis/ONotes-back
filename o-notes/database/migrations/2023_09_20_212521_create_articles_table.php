@@ -21,6 +21,7 @@ return new class extends Migration
             $table->text("text_content");
             $table->text("file_content")->nullable();
             $table->string("banner")->nullable();
+            $table->string("status")->default('draft');
             $table->foreignId('user_id')->constrained('users');
             $table->foreignId('subcategory_id')->constrained('sub_categories');
             $table->timestamps();
