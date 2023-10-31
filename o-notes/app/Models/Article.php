@@ -18,6 +18,7 @@ class Article extends Model
         'subtitle',
         'text_content',
         'file_content',
+        'resume',
         'banner',
         'user_id',
         'subcategory_id',
