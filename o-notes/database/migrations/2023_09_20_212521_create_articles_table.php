@@ -17,9 +17,11 @@ return new class extends Migration
             $table->string("title", 100);
             $table->string("subtitle");
             $table->string("slug")->default('');
+            $table->text("resume")->nullable();
             $table->text("text_content");
             $table->text("file_content")->nullable();
             $table->string("banner")->nullable();
+            $table->string("status")->default('draft');
             $table->foreignId('user_id')->constrained('users');
             $table->foreignId('subcategory_id')->constrained('sub_categories');
             $table->timestamps();
