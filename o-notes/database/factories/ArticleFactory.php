@@ -28,6 +28,7 @@ class ArticleFactory extends Factory
             'slug' => Str::slug($title),
             'text_content' => $content,
             'file_content' => fake()->name,
+            'resume' => fake()->paragraphs(1,true),
             'banner' => fake()->imageUrl,
             'user_id' => fake()->randomNumber(),
             'subcategory_id' => function () {
