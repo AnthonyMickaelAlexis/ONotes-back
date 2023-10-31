@@ -28,6 +28,7 @@ class ArticleFactory extends Factory
             'slug' => Str::slug($title),
             'text_content' => $content,
             'file_content' => fake()->name,
+            'resume' => fake()->paragraphs(1,true),
             'banner' => fake()->imageUrl,
             'user_id' => fake()->randomNumber(),
             'subcategory_id' => function () {
@@ -39,10 +40,12 @@ class ArticleFactory extends Factory
         ];
     }
 
-    public function configure(): ArticleFactory
+
+    public function configure()
     {
         return $this->afterCreating(function (Article $article) {
-            $article->tag()->attach(Tag::factory()->count(3)->create());
+            $tags = Tag::class::factory()->count(2)->create();
+            $article->tag()->attach($tags);
         });
     }
 }

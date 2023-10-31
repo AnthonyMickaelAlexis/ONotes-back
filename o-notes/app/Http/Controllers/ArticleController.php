@@ -16,14 +16,24 @@ class ArticleController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $articles = Article::with('user:id,pseudo,avatar')->with('tag')->where('status', 'published')->get();
+        $limit = trim($request->input('limit', null));
+        $orderBy = trim($request->input('orderBy', 'created_at'));
+
+        // Vérification qu'une limite est défini et si c'est bien un int
+        if ($limit && !is_numeric($limit)){
+            return $this->onError(404, 'Limit invalid');
+        }
+
+        $articles = Article::with('user:id,pseudo,avatar')->with('tag')->limit($limit)->orderBy($orderBy, 'DESC')->get();
 
         if (!empty($articles)) {
             return $this->onSuccess($articles, 'All Articles');
         }
         return $this->onError(404, 'No Articles Found');
+
     }
 
     /**
@@ -43,6 +53,7 @@ class ArticleController extends Controller
                     'slug' => Str::slug($request->title),
                     'text_content' => $request->text_content,
                     'file_content' => $request->file_content,
+                    'resume' => $request->resume,
                     'banner' => $request->banner,
                     'user_id' => $request->user()->id,
                     'subcategory_id' => $request->subcategory_id,
@@ -50,27 +61,27 @@ class ArticleController extends Controller
                 ]);
 
                 // Récupérer les tags sélectionnés par l'utilisateur
-                $tags = $request->input('tags');
+                $tags = $request->get('tags');
 
                 // Synchroniser les tags avec l'article
                 $article->tag()->sync($tags);
 
                 // Vérifier si un nouveau tag a été créé
-                $newTag = $request->input('newTag');
-
-                if ($newTag) {
-                    // Créer un nouveau tag
-                    $tag = Tag::create([
-                        'name' => $newTag['name'],
-                        'slug' => Str::slug($newTag['name']),
-                        'user_id' => $request->user()->id,
-                        'logo' => $newTag['logo'],
-                        'color' => $newTag['color'],
-                        'bg_color' => $newTag['bg_color'],
-                        ]);
-
-                    // Synchroniser le nouveau tag avec l'article
-                    $article->tag()->attach($tag->id);
+                $newTags = $request->get('newTags');
+                if ($newTags) {
+                    foreach ($newTags as $newTag) {
+                            // Créer un nouveau tag
+                            $tag = Tag::create([
+                                'name' => $newTag['name'],
+                                'slug' => Str::slug($newTag['name']),
+                                'user_id' => $request->user()->id,
+                                'logo' => $newTag['logo'],
+                                'color' => $newTag['color'],
+                                'bg_color' => $newTag['bg_color'],
+                            ]);
+                        // Synchroniser le nouveau tag avec l'article
+                        $article->tag()->attach($tag->id);
+                    }
                 }
 
                 return $this->onSuccess($article, 'Article Created');
@@ -120,6 +131,7 @@ class ArticleController extends Controller
                 'slug' => Str::slug($request->title),
                 'text_content' => $request->text_content,
                 'file_content' => $request->file_content,
+                'resume' => $request->resume,
                 'banner' => $request->banner,
                 'subcategory_id' => $request->subcategory_id,
                 'tags' => $request->tags,
@@ -127,33 +139,32 @@ class ArticleController extends Controller
             ]);
 
             // Récupérer les tags sélectionnés par l'utilisateur
-            $tags = $request->input('tags');
+            $tags = $request->get('tags');
 
             // Synchroniser les tags avec l'article
             $article->tag()->sync($tags);
 
-            // Vérifier si un nouveau tag a été créé
-            $newTag = $request->input('newTag');
-
-            if ($newTag) {
-                // Créer un nouveau tag
-                $tag = Tag::create([
-                    'name' => $newTag['name'],
-                    'slug' => Str::slug($newTag['name']),
-                    'user_id' => $request->user()->id,
-                    'logo' => $newTag['logo'],
-                    'color' => $newTag['color'],
-                    'bg_color' => $newTag['bg_color'],
-                ]);
-
-                // Synchroniser le nouveau tag avec l'article
-                $article->tag()->attach($tag->id);
+            $newTags = $request->get('newTags');
+            if ($newTags) {
+                foreach ($newTags as $newTag) {
+                    // Créer un nouveau tag
+                    $tag = Tag::create([
+                        'name' => $newTag['name'],
+                        'slug' => Str::slug($newTag['name']),
+                        'user_id' => $request->user()->id,
+                        'logo' => $newTag['logo'],
+                        'color' => $newTag['color'],
+                        'bg_color' => $newTag['bg_color'],
+                    ]);
+                    // Synchroniser le nouveau tag avec l'article
+                    $article->tag()->attach($tag->id);
+                }
             }
 
             // Enregistrer les modifications
             $article->save();
 
-            return $this->onSuccess([$article, $newTag], 'Article Updated');
+            return $this->onSuccess([$article], 'Article Updated');
         }
 
         return $this->onError(400, $validator->errors());
