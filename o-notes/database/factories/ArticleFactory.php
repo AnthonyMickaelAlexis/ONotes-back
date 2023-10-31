@@ -38,10 +38,12 @@ class ArticleFactory extends Factory
         ];
     }
 
-    public function configure(): ArticleFactory
+
+    public function configure()
     {
         return $this->afterCreating(function (Article $article) {
-            $article->tag()->attach(Tag::factory()->count(3)->create());
+            $tags = Tag::class::factory()->count(2)->create();
+            $article->tag()->attach($tags);
         });
     }
 }
