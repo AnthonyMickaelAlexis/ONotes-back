@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Category;
+use App\Models\SubCategory;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Article;
@@ -28,13 +30,26 @@ class ArticleSeeder extends Seeder
             'role' => 'admin'
         ]);
 
-        Article::class::factory()->count(10)->for($admin)->create();
-        Tag::class::factory()->count(30)->for($admin)->create();
+        // créé 10 catégories
+        $categories = Category::class::factory()->count(5)->create();
 
-         $users = User::factory()->count(10)->create();
-         foreach ($users as $user) {
-             Article::factory()->count(random_int(3, 8))->for($user)->create();
-             Tag::factory()->count(random_int(3, 8))->for($user)->create();
-         }
+        // pour chaque catégorie, créé 2 à 5 sous-catégories
+        foreach ($categories as $category) {
+            SubCategory::class::factory()->count(random_int(2, 5))->for($category)->create();
+        }
+
+        //Récupère toutes les sous-catégories
+        $subcategories = SubCategory::all();
+
+        // créé 10 utilisateurs
+        $users = User::factory()->count(5)->create();
+
+        foreach ($users as $user) {
+            foreach ($subcategories as $subcategory) {
+
+                Article::factory()->count(2)->for($user)->for($subcategory)->create();
+                Tag::factory()->count(2)->for($user)->create();
+             }
+        }
     }
 }
