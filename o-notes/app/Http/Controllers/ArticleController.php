@@ -16,14 +16,22 @@ class ArticleController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $articles = Article::with('user:id,pseudo,avatar')->with('tag')->get();
+        $limit = trim($request->input('limit', null));
+        $orderBy = trim($request->input('orderBy', 'created_at'));
 
-            if (!empty($articles)) {
-                return $this->onSuccess($articles, 'All Articles');
-            }
-            return $this->onError(404, 'No Articles Found');
+        // Vérification qu'une limite est défini et si c'est bien un int
+        if ($limit && !is_numeric($limit)){
+            return $this->onError(404, 'Limit invalid');
+        }
+
+        $articles = Article::with('user:id,pseudo,avatar')->with('tag')->limit($limit)->orderBy($orderBy, 'DESC')->get();
+
+        if (!empty($articles)) {
+            return $this->onSuccess($articles, 'All Articles');
+        }
+        return $this->onError(404, 'No Articles Found');
 
     }
 
