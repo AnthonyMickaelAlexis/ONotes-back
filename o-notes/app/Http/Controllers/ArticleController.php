@@ -18,6 +18,7 @@ class ArticleController extends Controller
      */
     public function index(Request $request)
     {
+        $articles = Article::with('user:id,pseudo,avatar')->with('tag')->where('status', 'published')->get();
         $limit = trim($request->input('limit', null));
         $orderBy = trim($request->input('orderBy', 'created_at'));
 
@@ -33,19 +34,6 @@ class ArticleController extends Controller
         }
         return $this->onError(404, 'No Articles Found');
 
-    }
-
-    /**
-     * Récupère les articles pour la homepage avec les utilisateurs qui les ont écrits.
-     */
-    public function homepage()
-    {
-        $articles = Article::with('user:id,pseudo,avatar')->with('tag')->orderBy("created_at", "desc")->take(10)->get();
-
-        if (!empty($articles)) {
-            return $this->onSuccess($articles, 'All Articles');
-        }
-        return $this->onError(404, 'No Articles Found');
     }
 
     /**
