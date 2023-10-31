@@ -51,6 +51,8 @@ Route::get('/articles', [
 Route::get('/articles/homepage', [ArticleController::class, 'homepage']);
 Route::get('/article/{id}', [ArticleController::class, 'show']);
 
+Route::get('test');
+
 Route::get('/categories', [CategoryController::class, 'index']);
 Route::get('/category/{id}', [CategoryController::class, 'show']);
 
