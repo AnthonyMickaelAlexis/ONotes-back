@@ -18,7 +18,7 @@ class ArticleController extends Controller
      */
     public function index(Request $request)
     {
-        $articles = Article::with('user:id,pseudo,avatar')->with('tag')->where('status', 'published')->get();
+        // ajoute offset et start_index
         $limit = trim($request->input('limit', null));
         $orderBy = trim($request->input('orderBy', 'created_at'));
 
@@ -27,7 +27,7 @@ class ArticleController extends Controller
             return $this->onError(404, 'Limit invalid');
         }
 
-        $articles = Article::with('user:id,pseudo,avatar')->with('tag')->limit($limit)->orderBy($orderBy, 'DESC')->get();
+        $articles = Article::with('user:id,pseudo,avatar')->with('tag')->limit($limit)->orderBy($orderBy, 'DESC')->where('status', 'published')->paginate(10);
 
         if (!empty($articles)) {
             return $this->onSuccess($articles, 'All Articles');
