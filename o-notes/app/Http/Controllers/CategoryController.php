@@ -58,10 +58,15 @@ class CategoryController extends Controller
     {
 
         $category = Category::find($id);
-        $subcategory = SubCategory::where('category_id', $id)->get();
+        $subcategories = SubCategory::where('category_id', $id)->get();
+        foreach ($subcategories as $subcategory) {
+            $articles = Article::where(['subcategory_id'=> $subcategory->id, 'status' => 'published'])->with('tag')->get();
+            $subcategory->articles = $articles;
+        }
+
 
         if (!empty($category)) {
-            return $this->onSuccess([$category, $subcategory], 'Category Found');
+            return $this->onSuccess([$category, $subcategory, $articles], 'Category Found');
         }
 
         return $this->onError(404, 'Category Not Found');

@@ -67,7 +67,7 @@ class TagController extends Controller
     public function show(string $id)
     {
         $tags = Tag::find($id);
-        $articles = $tags->articles()->get();
+        $articles = $tags->articles()->where('status', 'published')->get();
 
         if (!empty($tags)) {
             return $this->onSuccess([$tags, $articles], 'Tag Found');

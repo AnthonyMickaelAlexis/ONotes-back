@@ -108,8 +108,9 @@ class ArticleController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $articleId)
+    public function update(Request $request, $id)
     {
+
         $user = $request->user();
 
         // Vérifier si l'utilisateur est autorisé à éditer l'article
@@ -118,7 +119,8 @@ class ArticleController extends Controller
         }
 
         // Récupérer l'article à éditer
-        $article = Article::findOrFail($articleId);
+        //$article = Article::findOrFail($id);
+        $article = Article::find($id);
 
         // Valider les données de la requête
         $validator = Validator::make($request->all(), $this->postValidationRules());
@@ -164,7 +166,7 @@ class ArticleController extends Controller
             // Enregistrer les modifications
             $article->save();
 
-            return $this->onSuccess([$article], 'Article Updated');
+            return $this->onSuccess([$article, $article->tag()->get()], 'Article Updated');
         }
 
         return $this->onError(400, $validator->errors());
