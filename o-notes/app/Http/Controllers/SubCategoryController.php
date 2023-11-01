@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Article;
 use Illuminate\Http\Request;
 use App\Http\Library\ApiHelpers;
 use App\Models\SubCategory;
@@ -54,8 +55,10 @@ class SubCategoryController extends Controller
     public function show(string $id)
     {
         $subcategory = SubCategory::find($id);
+        $articles = Article::where(['subcategory_id'=> $id, 'status' => 'published'])->with('tag')->get();
+
         if (!empty($subcategory)) {
-            return $this->onSuccess($subcategory, 'SubCategory Found');
+            return $this->onSuccess([$subcategory, $articles], 'SubCategory Found');
         }
         return $this->onError(404, 'SubCategory Not Found');
     }
