@@ -18,7 +18,6 @@ class ArticleController extends Controller
      */
     public function index(Request $request)
     {
-        // ajoute offset et start_index
         $limit = trim($request->input('limit', null));
         $orderBy = trim($request->input('orderBy', 'created_at'));
 
