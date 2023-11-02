@@ -106,10 +106,9 @@ class ArticleController extends Controller
     public function show(string $id)
     {
         $article = Article::with('user:id,pseudo,avatar')->with('tag')->find($id);
-
         $subcategory = SubCategory::with('category')->where('id', $article->subcategory_id)->get();
 
-        if (!empty($articles)) {
+        if (!empty($article)) {
             return $this->onSuccess([$article, $subcategory], 'Article Found');
         }
 
