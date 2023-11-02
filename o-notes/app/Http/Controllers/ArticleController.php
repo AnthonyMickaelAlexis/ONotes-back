@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\SubCategory;
 use App\Models\Tag;
 use Illuminate\Http\Request;
 use App\Http\Library\ApiHelpers;
@@ -104,10 +105,12 @@ class ArticleController extends Controller
      */
     public function show(string $id)
     {
-        $articles = Article::with('user:id,pseudo,avatar')->with('tag')->find($id);
+        $article = Article::with('user:id,pseudo,avatar')->with('tag')->find($id);
+
+        $subcategory = SubCategory::with('category')->where('id', $article->subcategory_id)->get();
 
         if (!empty($articles)) {
-            return $this->onSuccess($articles, 'Article Found');
+            return $this->onSuccess([$article, $subcategory], 'Article Found');
         }
 
         return $this->onError(404, 'Article Not Found');
