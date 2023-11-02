@@ -43,6 +43,8 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::get('/dashboard/mes-articles', [UserController::class, 'articles']);
 });
 
+Route::get('user/{id}', [UserController::class, 'show']);
+
 Route::get('/articles', [
     ArticleController::class,
     'index',
@@ -60,8 +62,6 @@ Route::get('/subcategory/{id}', [SubCategoryController::class, 'show']);
 Route::get('/tags', [TagController::class, 'index']);
 Route::get('/tags/homepage', [TagController::class, 'homepage']);
 Route::get('/tag/{id}', [TagController::class, 'show']);
-
-Route::get('/user/{id}', [UserController::class, 'show']);
 
 Route::post('/register', [RegisterController::class, 'register']);
 Route::post('/login', [LoginController::class, 'login'])->name('login');
