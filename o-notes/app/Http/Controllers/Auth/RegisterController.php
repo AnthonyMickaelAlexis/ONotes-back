@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 
 class RegisterController extends Controller
@@ -17,13 +18,21 @@ class RegisterController extends Controller
     public function register(Request $request): \Illuminate\Http\JsonResponse
     {
         $validator = Validator::make($request->all(), $this->userValidatedRules());
+
+        // récupération de l'image et enregistrement dans le dossier public/img
+        $avatar = $request->avatar;
+        $avatar = str_replace('data:image/png;base64,', '', $avatar);
+        $avatar = str_replace(' ', '+', $avatar);
+        $imageName = Str::random(10).'.'.'png';
+        \File::put(public_path(). '/img/userAvatar' . $imageName, base64_decode($avatar));
+
             if ($validator->passes()) {
                 // Create New Writer
                 $user = User::create([
                     'lastname' => $request->lastname,
                     'firstname' => $request->firstname,
                     'pseudo' => $request->pseudo,
-                    'avatar' => $request->avatar,
+                    'avatar' => $imageName,
                     'email' => $request->email,
                     'password' => Hash::make($request->password)
                 ]);
