@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('lastname');
             $table->string('firstname');
-            $table->string('pseudo')->unique();
+            $table->string('pseudo')->unique()->nullable();
             $table->string('role')->default('user');
             $table->string('avatar')->nullable();
             $table->string('email')->unique();

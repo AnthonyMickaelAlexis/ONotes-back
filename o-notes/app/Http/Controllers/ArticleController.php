@@ -27,7 +27,21 @@ class ArticleController extends Controller
             return $this->onError(404, 'Limit invalid');
         }
 
-        $articles = Article::with('user:id,pseudo,avatar')->with('tag')->limit($limit)->orderBy($orderBy, 'DESC')->where('status', 'published')->paginate(10);
+        $articles = Article::with('user:id,pseudo,avatar,firstname,lastname')->with('tag')->limit($limit)->orderBy($orderBy, 'DESC')->where('status', 'published')->paginate(10);
+        foreach ($articles as $article) {
+            // on vérifie si l'utilisateur a un pseudo
+            if ($article->user->pseudo != null) {
+                // L'utilisateur a un pseudo, on laisse le pseudo
+                $article->user->pseudo;
+                unset($article->user->firstname);
+                unset($article->user->lastname);
+
+            } else {
+                $article->user->firstname;
+                $article->user->lastname;
+                unset($article->user->pseudo);
+            }
+        }
 
         if (!empty($articles)) {
             return $this->onSuccess($articles, 'All Articles');

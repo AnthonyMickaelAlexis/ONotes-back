@@ -86,7 +86,7 @@ trait ApiHelpers
         return [
             'lastname' => ['required', 'string', 'max:255'],
             'firstname' => ['required', 'string', 'max:255'],
-            'pseudo' => ['required', 'string', 'max:255', 'unique:users'],
+            'pseudo' => ['string', 'max:255', 'unique:users'],
             'avatar' => ['string'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
