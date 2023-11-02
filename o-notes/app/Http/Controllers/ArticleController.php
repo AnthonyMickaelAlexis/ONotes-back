@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\SubCategory;
 use App\Models\Tag;
 use Illuminate\Http\Request;
 use App\Http\Library\ApiHelpers;
@@ -26,8 +27,7 @@ class ArticleController extends Controller
             return $this->onError(404, 'Limit invalid');
         }
 
-        $articles = Article::with('user:id,pseudo,avatar,firstname,lastname')->with('tag')->limit($limit)->orderBy($orderBy, 'DESC')->get();
-
+        $articles = Article::with('user:id,pseudo,avatar,firstname,lastname')->with('tag')->limit($limit)->orderBy($orderBy, 'DESC')->where('status', 'published')->paginate(10);
         foreach ($articles as $article) {
             // on vérifie si l'utilisateur a un pseudo
             if ($article->user->pseudo != null) {
@@ -118,10 +118,11 @@ class ArticleController extends Controller
      */
     public function show(string $id)
     {
-        $articles = Article::with('user:id,pseudo,avatar')->with('tag')->find($id);
+        $article = Article::with('user:id,pseudo,avatar')->with('tag')->find($id);
+        $subcategory = SubCategory::with('category')->where('id', $article->subcategory_id)->get();
 
-        if (!empty($articles)) {
-            return $this->onSuccess($articles, 'Article Found');
+        if (!empty($article)) {
+            return $this->onSuccess([$article, $subcategory], 'Article Found');
         }
 
         return $this->onError(404, 'Article Not Found');
