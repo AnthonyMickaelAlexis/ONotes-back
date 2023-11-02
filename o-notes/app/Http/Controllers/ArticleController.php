@@ -65,7 +65,7 @@ class ArticleController extends Controller
             $banner = str_replace('data:image/png;base64,', '', $banner);
             $banner = str_replace(' ', '+', $banner);
             $imageName = Str::random(10).'.'.'png';
-            \File::put(public_path(). '/img/articleBanner' . $imageName, base64_decode($banner));
+            \File::put(public_path(). '/img/articleBanner/' . $imageName, base64_decode($banner));
 
 
             if ($validator->passes()) {
