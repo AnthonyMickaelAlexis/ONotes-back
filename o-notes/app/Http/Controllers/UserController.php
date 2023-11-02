@@ -44,7 +44,8 @@ class UserController extends Controller
     /**
      * Listing des tags de l'utilisateur
      */
-    public function tags(){
+    public function tags()
+    {
         $user = auth()->user();
 
         if ($user) {
@@ -61,6 +62,18 @@ class UserController extends Controller
         }
 
         return $this->onError(400, 'User Not Found');
+    }
+
+    public function show(string $id)
+    {
+        $user = User::find($id);
+        $articles = Article::where('user_id', $id)->where('status', 'published')->get();
+        $tags = Tag::where('user_id', $id)->get();
+
+        if (!empty($user)) {
+            return $this->onSuccess([$user, $articles, $tags], 'User Found');
+        }
+        return $this->onError(404, 'User Not Found');
     }
 
 }
