@@ -20,11 +20,12 @@ class RegisterController extends Controller
         $validator = Validator::make($request->all(), $this->userValidatedRules());
 
         // récupération de l'image et enregistrement dans le dossier public/img
-        $avatar = $request->avatar;
-        $avatar = str_replace('data:image/png;base64,', '', $avatar);
-        $avatar = str_replace(' ', '+', $avatar);
-        $imageName = Str::random(10).'.'.'png';
-        \File::put(public_path(). '/img/userAvatar' . $imageName, base64_decode($avatar));
+        if ($request->avatar === !null) {
+            $avatar = $request->avatar;
+            $avatar = str_replace('data:image/png;base64,', '', $avatar);
+            $avatar = str_replace(' ', '+', $avatar);
+            $imageName = Str::random(10) . '.' . 'png';
+            \File::put(public_path() . '/img/userAvatar' . $imageName, base64_decode($avatar));
 
             if ($validator->passes()) {
                 // Create New Writer
@@ -40,6 +41,22 @@ class RegisterController extends Controller
                 $writerToken = $user->createToken('auth_token', ['user'])->plainTextToken;
                 return $this->onSuccess($writerToken, 'User Created With User Role');
             }
+        }
+
+        if ($validator->passes()) {
+            // Create New Writer
+            $user = User::create([
+                'lastname' => $request->lastname,
+                'firstname' => $request->firstname,
+                'pseudo' => $request->pseudo,
+                'avatar' => $request->avatar,
+                'email' => $request->email,
+                'password' => Hash::make($request->password)
+            ]);
+
+            $writerToken = $user->createToken('auth_token', ['user'])->plainTextToken;
+            return $this->onSuccess($writerToken, 'User Created With User Role');
+        }
         return $this->onError(400, $validator->errors());
     }
 }
