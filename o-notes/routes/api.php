@@ -51,8 +51,6 @@ Route::get('/articles', [
 Route::get('/articles/homepage', [ArticleController::class, 'homepage']);
 Route::get('/article/{id}', [ArticleController::class, 'show']);
 
-Route::get('test');
-
 Route::get('/categories', [CategoryController::class, 'index']);
 Route::get('/category/{id}', [CategoryController::class, 'show']);
 
@@ -62,6 +60,8 @@ Route::get('/subcategory/{id}', [SubCategoryController::class, 'show']);
 Route::get('/tags', [TagController::class, 'index']);
 Route::get('/tags/homepage', [TagController::class, 'homepage']);
 Route::get('/tag/{id}', [TagController::class, 'show']);
+
+Route::get('/user/{id}', [UserController::class, 'show']);
 
 Route::post('/register', [RegisterController::class, 'register']);
 Route::post('/login', [LoginController::class, 'login'])->name('login');

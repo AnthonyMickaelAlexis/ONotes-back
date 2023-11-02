@@ -8,6 +8,7 @@ use App\Models\Tag;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use JetBrains\PhpStorm\NoReturn;
 
 class UserController extends Controller
 {
@@ -44,7 +45,8 @@ class UserController extends Controller
     /**
      * Listing des tags de l'utilisateur
      */
-    public function tags(){
+    public function tags()
+    {
         $user = auth()->user();
 
         if ($user) {
@@ -61,6 +63,17 @@ class UserController extends Controller
         }
 
         return $this->onError(400, 'User Not Found');
+    }
+
+    public function show(string $id)
+    {
+        $user = User::find($id);
+        dd($user);
+        if (!empty($user)) {
+            return $this->onSuccess($user, 'User Found');
+        }
+
+        return $this->onError(404, 'User Not Found');
     }
 
 }
