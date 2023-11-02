@@ -20,7 +20,7 @@ class RegisterController extends Controller
         $validator = Validator::make($request->all(), $this->userValidatedRules());
 
         // récupération de l'image et enregistrement dans le dossier public/img
-        if ($request->avatar === !null) {
+        if ($request->avatar != null) {
             $avatar = $request->avatar;
             $avatar = str_replace('data:image/png;base64,', '', $avatar);
             $avatar = str_replace(' ', '+', $avatar);
