@@ -55,7 +55,7 @@ class TagController extends Controller
             $logo = str_replace('data:image/png;base64,', '', $logo);
             $logo = str_replace(' ', '+', $logo);
             $imageName = Str::random(10).'.'.'png';
-            \File::put(public_path(). '/img/tagLogo' . $imageName, base64_decode($logo));
+            \File::put(public_path(). '/img/tagLogo/' . $imageName, base64_decode($logo));
 
             if ($validator->passes()) {
                 $tag = Tag::create([

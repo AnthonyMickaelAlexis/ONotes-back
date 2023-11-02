@@ -25,7 +25,7 @@ class RegisterController extends Controller
             $avatar = str_replace('data:image/png;base64,', '', $avatar);
             $avatar = str_replace(' ', '+', $avatar);
             $imageName = Str::random(10) . '.' . 'png';
-            \File::put(public_path() . '/img/userAvatar' . $imageName, base64_decode($avatar));
+            \File::put(public_path() . '/img/userAvatar/' . $imageName, base64_decode($avatar));
 
             if ($validator->passes()) {
                 // Create New Writer
