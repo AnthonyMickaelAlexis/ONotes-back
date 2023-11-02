@@ -64,9 +64,8 @@ class CategoryController extends Controller
             $subcategory->articles = $articles;
         }
 
-
         if (!empty($category)) {
-            return $this->onSuccess([$category, $subcategory, $articles], 'Category Found');
+            return $this->onSuccess([$category, $subcategories], 'Category Found');
         }
 
         return $this->onError(404, 'Category Not Found');
