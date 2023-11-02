@@ -18,7 +18,6 @@ class ArticleController extends Controller
      */
     public function index(Request $request)
     {
-        $articles = Article::with('user:id,pseudo,avatar')->with('tag')->where('status', 'published')->get();
         $limit = trim($request->input('limit', null));
         $orderBy = trim($request->input('orderBy', 'created_at'));
 
@@ -27,7 +26,22 @@ class ArticleController extends Controller
             return $this->onError(404, 'Limit invalid');
         }
 
-        $articles = Article::with('user:id,pseudo,avatar')->with('tag')->limit($limit)->orderBy($orderBy, 'DESC')->get();
+        $articles = Article::with('user:id,pseudo,avatar,firstname,lastname')->with('tag')->limit($limit)->orderBy($orderBy, 'DESC')->get();
+
+        foreach ($articles as $article) {
+            // on vérifie si l'utilisateur a un pseudo
+            if ($article->user->pseudo != null) {
+                // L'utilisateur a un pseudo, on laisse le pseudo
+                $article->user->pseudo;
+                unset($article->user->firstname);
+                unset($article->user->lastname);
+
+            } else {
+                $article->user->firstname;
+                $article->user->lastname;
+                unset($article->user->pseudo);
+            }
+        }
 
         if (!empty($articles)) {
             return $this->onSuccess($articles, 'All Articles');
