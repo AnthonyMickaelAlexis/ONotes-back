@@ -60,7 +60,7 @@ class ArticleController extends Controller
         if($this->IsAdmin($user) || $this->isUser($user)) {
             $validator = Validator::make($request->all(), $this->postValidationRules());
 
-            if ($request->banner){
+           /* if ($request->banner){
                 // récupération de l'image et enregistrement dans le dossier public/img
                 $banner = $request->banner;
                 $banner = str_replace('data:image/png;base64,', '', $banner);
@@ -73,7 +73,7 @@ class ArticleController extends Controller
                 }
 
                 \File::put(public_path(). '/img/' . $imageName, base64_decode($banner));
-            }
+            }*/
 
             if ($validator->passes()) {
                 $article = Article::create([
@@ -83,7 +83,8 @@ class ArticleController extends Controller
                     'text_content' => $request->text_content,
                     'file_content' => $request->file_content,
                     'resume' => $request->resume,
-                    'banner' => isset($imageName) ? public_path().'/img/'.$imageName : null,
+                    'banner' => 'https://picsum.photos/200',
+                    //'banner' => isset($imageName) ? public_path().'/img/'.$imageName : null,
                     'user_id' => $request->user()->id,
                     'subcategory_id' => $request->subcategory_id,
                     'status' => $request->status,
@@ -162,7 +163,7 @@ class ArticleController extends Controller
 
         $article = Article::find($id);
 
-        if (!empty($request->banner)){
+/*        if (!empty($request->banner)){
             if ($article->banner != null){
                 unlink($article->banner);
             }
@@ -173,7 +174,7 @@ class ArticleController extends Controller
             $imageName = Str::random(10).'.'.'png';
 
             \File::put(public_path(). '/img/' . $imageName, base64_decode($banner));
-        }
+        }*/
 
         // Valider les données de la requête
         $validator = Validator::make($request->all(), $this->postValidationRules());
@@ -187,7 +188,8 @@ class ArticleController extends Controller
                 'text_content' => $request->text_content,
                 'file_content' => $request->file_content,
                 'resume' => $request->resume,
-                'banner' => isset($imageName) ? public_path().'/img/'.$imageName : $article->banner,
+                'banner' => 'https://picsum.photos/200',
+                //'banner' => isset($imageName) ? public_path().'/img/'.$imageName : $article->banner,
                 'subcategory_id' => $request->subcategory_id,
                 'tags' => $request->tags,
                 'status' => $request->status,
@@ -207,7 +209,8 @@ class ArticleController extends Controller
                         'name' => $newTag['name'],
                         'slug' => Str::slug($newTag['name']),
                         'user_id' => $request->user()->id,
-                        'logo' => $newTag['logo'],
+                        'logo' => 'https://picsum.photos/200',
+                        //'logo' => $newTag['logo'],
                         'color' => $newTag['color'],
                         'bg_color' => $newTag['bg_color'],
                     ]);

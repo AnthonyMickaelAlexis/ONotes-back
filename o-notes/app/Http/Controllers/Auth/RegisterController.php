@@ -19,7 +19,7 @@ class RegisterController extends Controller
     {
         $validator = Validator::make($request->all(), $this->userValidatedRules());
 
-        // récupération de l'image et enregistrement dans le dossier public/img
+/*        // récupération de l'image et enregistrement dans le dossier public/img
         if ($request->avatar) {
             $avatar = $request->avatar;
             $avatar = str_replace('data:image/png;base64,', '', $avatar);
@@ -32,14 +32,16 @@ class RegisterController extends Controller
             }
 
             \File::put(public_path() . '/img/Avatar' . $imageName, base64_decode($avatar));
-        }
+        }*/
+
             if ($validator->passes()) {
                 // Create New Writer
                 $user = User::create([
                     'lastname' => $request->lastname,
                     'firstname' => $request->firstname,
                     'pseudo' => $request->pseudo ?? null,
-                    'avatar' => isset($imageName) ? '/img/' . $imageName : null,
+                    'avatar' => 'https://picsum.photos/200',
+                    //'avatar' => isset($imageName) ? '/img/' . $imageName : null,
                     'email' => $request->email,
                     'password' => Hash::make($request->password)
                 ]);
@@ -55,7 +57,7 @@ class RegisterController extends Controller
                 'lastname' => $request->lastname,
                 'firstname' => $request->firstname,
                 'pseudo' => $request->pseudo,
-                'avatar' => $request->avatar,
+                'avatar' => 'https://picsum.photos/200',
                 'email' => $request->email,
                 'password' => Hash::make($request->password)
             ]);
