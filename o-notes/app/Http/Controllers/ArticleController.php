@@ -83,7 +83,7 @@ class ArticleController extends Controller
                     'text_content' => $request->text_content,
                     'file_content' => $request->file_content,
                     'resume' => $request->resume,
-                    'banner' => $imageName ?? null,
+                    'banner' => '/img/' . $imageName ?? null,
                     'user_id' => $request->user()->id,
                     'subcategory_id' => $request->subcategory_id,
                     'status' => $request->status,
