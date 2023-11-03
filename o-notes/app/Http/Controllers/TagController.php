@@ -50,19 +50,29 @@ class TagController extends Controller
         if ($this->isUser($user)) {
             $validator = Validator::make($request->all(), $this->tagValidationRules());
 
-            // récupération de l'image et enregistrement dans le dossier public/img
-            $logo = $request->banner;
-            $logo = str_replace('data:image/png;base64,', '', $logo);
-            $logo = str_replace(' ', '+', $logo);
-            $imageName = Str::random(10).'.'.'png';
-            \File::put(public_path(). '/img/tagLogo/' . $imageName, base64_decode($logo));
+
+
+            if ($request->banner){
+                // récupération de l'image et enregistrement dans le dossier public/img
+                $logo = $request->banner;
+                $logo = str_replace('data:image/png;base64,', '', $logo);
+                $logo = str_replace(' ', '+', $logo);
+                $imageName = Str::random(10).'.'.'png';
+
+                // création du dossier img s'il n'existe pas
+                if (!file_exists(public_path().'/img')){
+                    mkdir(public_path().'/img');
+                }
+
+                \File::put(public_path(). '/img' . $imageName, base64_decode($logo));
+            }
 
             if ($validator->passes()) {
                 $tag = Tag::create([
                     'name' => $request->name,
                     'slug' => Str::slug($request->name),
                     'user_id' => $user->id,
-                    'logo' => $imageName,
+                    'logo' => $imageName ?? '',
                     'color' => $request->color,
                     'bg_color' => $request->bg_color
                 ]);

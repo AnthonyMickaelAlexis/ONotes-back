@@ -20,13 +20,19 @@ class RegisterController extends Controller
         $validator = Validator::make($request->all(), $this->userValidatedRules());
 
         // récupération de l'image et enregistrement dans le dossier public/img
-        if ($request->avatar != null) {
+        if ($request->avatar) {
             $avatar = $request->avatar;
             $avatar = str_replace('data:image/png;base64,', '', $avatar);
             $avatar = str_replace(' ', '+', $avatar);
             $imageName = Str::random(10) . '.' . 'png';
-            \File::put(public_path() . '/img/userAvatar/' . $imageName, base64_decode($avatar));
 
+            // création du dossier img s'il n'existe pas
+            if (!file_exists(public_path().'/img')){
+                mkdir(public_path().'/img');
+            }
+
+            \File::put(public_path() . '/img/Avatar' . $imageName, base64_decode($avatar));
+        }
             if ($validator->passes()) {
                 // Create New Writer
                 $user = User::create([
@@ -41,7 +47,7 @@ class RegisterController extends Controller
                 $writerToken = $user->createToken('auth_token', ['user'])->plainTextToken;
                 return $this->onSuccess($writerToken, 'User Created With User Role');
             }
-        }
+
 
         if ($validator->passes()) {
             // Create New Writer
