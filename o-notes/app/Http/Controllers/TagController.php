@@ -72,7 +72,7 @@ class TagController extends Controller
                     'name' => $request->name,
                     'slug' => Str::slug($request->name),
                     'user_id' => $user->id,
-                    'logo' => $imageName ?? '',
+                    'logo' => 'img/' . $imageName ?? '',
                     'color' => $request->color,
                     'bg_color' => $request->bg_color
                 ]);

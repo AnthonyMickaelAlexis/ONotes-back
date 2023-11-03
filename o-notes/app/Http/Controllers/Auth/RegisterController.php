@@ -39,7 +39,7 @@ class RegisterController extends Controller
                     'lastname' => $request->lastname,
                     'firstname' => $request->firstname,
                     'pseudo' => $request->pseudo ?? null,
-                    'avatar' => $imageName ?? null,
+                    'avatar' => './' . $imageName ?? null,
                     'email' => $request->email,
                     'password' => Hash::make($request->password)
                 ]);
