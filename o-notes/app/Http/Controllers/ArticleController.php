@@ -148,9 +148,20 @@ class ArticleController extends Controller
             return $this->onError(401, 'Unauthorized');
         }
 
-        // Récupérer l'article à éditer
-        //$article = Article::findOrFail($id);
         $article = Article::find($id);
+
+        if (!empty($request->banner)){
+            if ($article->banner != null){
+                unlink($article->banner);
+            }
+
+            $banner = $request->banner;
+            $banner = str_replace('data:image/png;base64,', '', $banner);
+            $banner = str_replace(' ', '+', $banner);
+            $imageName = Str::random(10).'.'.'png';
+
+            \File::put(public_path(). '/img/' . $imageName, base64_decode($banner));
+        }
 
         // Valider les données de la requête
         $validator = Validator::make($request->all(), $this->postValidationRules());
@@ -164,7 +175,7 @@ class ArticleController extends Controller
                 'text_content' => $request->text_content,
                 'file_content' => $request->file_content,
                 'resume' => $request->resume,
-                'banner' => $request->banner,
+                'banner' => isset($imageName) ? public_path().'/img/'.$imageName : $article->banner,
                 'subcategory_id' => $request->subcategory_id,
                 'tags' => $request->tags,
                 'status' => $request->status,
