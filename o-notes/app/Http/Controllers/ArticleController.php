@@ -60,13 +60,20 @@ class ArticleController extends Controller
         if($this->IsAdmin($user) || $this->isUser($user)) {
             $validator = Validator::make($request->all(), $this->postValidationRules());
 
-            // récupération de l'image et enregistrement dans le dossier public/img
-            $banner = $request->banner;
-            $banner = str_replace('data:image/png;base64,', '', $banner);
-            $banner = str_replace(' ', '+', $banner);
-            $imageName = Str::random(10).'.'.'png';
-            \File::put(public_path(). '/img/articleBanner/' . $imageName, base64_decode($banner));
+            if ($request->banner){
+                // récupération de l'image et enregistrement dans le dossier public/img
+                $banner = $request->banner;
+                $banner = str_replace('data:image/png;base64,', '', $banner);
+                $banner = str_replace(' ', '+', $banner);
+                $imageName = Str::random(10).'.'.'png';
 
+                // création du dossier img s'il n'existe pas
+                if (!file_exists(public_path().'/img')){
+                    mkdir(public_path().'/img');
+                }
+
+                \File::put(public_path(). '/img/' . $imageName, base64_decode($banner));
+            }
 
             if ($validator->passes()) {
                 $article = Article::create([
@@ -76,7 +83,7 @@ class ArticleController extends Controller
                     'text_content' => $request->text_content,
                     'file_content' => $request->file_content,
                     'resume' => $request->resume,
-                    'banner' => $imageName,
+                    'banner' => $imageName ?? null,
                     'user_id' => $request->user()->id,
                     'subcategory_id' => $request->subcategory_id,
                     'status' => $request->status,
