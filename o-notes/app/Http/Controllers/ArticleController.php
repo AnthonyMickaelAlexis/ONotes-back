@@ -125,8 +125,20 @@ class ArticleController extends Controller
      */
     public function show(string $id)
     {
-        $article = Article::with('user:id,pseudo,avatar')->with('tag')->find($id);
+        $article = Article::with('user:id,pseudo,avatar,firstname,lastname')->with('tag')->find($id);
         $subcategory = SubCategory::with('category')->where('id', $article->subcategory_id)->get();
+
+        if ($article->user->pseudo != null) {
+            // L'utilisateur a un pseudo, on laisse le pseudo
+            $article->user->pseudo;
+            unset($article->user->firstname);
+            unset($article->user->lastname);
+
+        } else {
+            $article->user->firstname;
+            $article->user->lastname;
+            unset($article->user->pseudo);
+        }
 
         if (!empty($article)) {
             return $this->onSuccess([$article, $subcategory], 'Article Found');
