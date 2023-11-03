@@ -52,7 +52,7 @@ class TagController extends Controller
 
 
 
-            if ($request->banner){
+            /*if ($request->banner){
                 // récupération de l'image et enregistrement dans le dossier public/img
                 $logo = $request->banner;
                 $logo = str_replace('data:image/png;base64,', '', $logo);
@@ -65,14 +65,15 @@ class TagController extends Controller
                 }
 
                 \File::put(public_path(). '/img' . $imageName, base64_decode($logo));
-            }
+            }*/
 
             if ($validator->passes()) {
                 $tag = Tag::create([
                     'name' => $request->name,
                     'slug' => Str::slug($request->name),
                     'user_id' => $user->id,
-                    'logo' => isset($imageName) ? '/img/' . $imageName : null,
+                    'logo' => 'https://picsum.photos/200',
+                    //'logo' => isset($imageName) ? '/img/' . $imageName : null,
                     'color' => $request->color,
                     'bg_color' => $request->bg_color
                 ]);
@@ -112,7 +113,8 @@ class TagController extends Controller
                     'name' => $request->name,
                     'slug' => Str::slug($request->name),
                     'user_id' => $user->id,
-                    'logo' => $request->logo,
+                    'logo' => 'https://picsum.photos/200',
+                    //'logo' => $request->logo,
                     'color' => $request->color,
                     'bg_color' => $request->bg_color
                 ]);
