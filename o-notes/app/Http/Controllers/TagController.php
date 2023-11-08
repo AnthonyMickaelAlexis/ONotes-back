@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Library\ApiHelpers;
 use App\Models\Tag;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 
@@ -50,30 +51,24 @@ class TagController extends Controller
         if ($this->isUser($user)) {
             $validator = Validator::make($request->all(), $this->tagValidationRules());
 
+            if ($request->logo){
+                $base64Banner = $request->logo;
+                $imageData = base64_decode($base64Banner);
 
+                $imageName = Str::random(10) . '.png'; // Générez un nom de fichier aléatoire
+                $path = '/logos/' . $imageName;
 
-            /*if ($request->banner){
-                // récupération de l'image et enregistrement dans le dossier public/img
-                $logo = $request->banner;
-                $logo = str_replace('data:image/png;base64,', '', $logo);
-                $logo = str_replace(' ', '+', $logo);
-                $imageName = Str::random(10).'.'.'png';
-
-                // création du dossier img s'il n'existe pas
-                if (!file_exists(public_path().'/img')){
-                    mkdir(public_path().'/img');
-                }
-
-                \File::put(public_path(). '/img' . $imageName, base64_decode($logo));
-            }*/
+                Storage::disk('public')->put($path, $imageData);
+            } else {
+                $path = null;
+            }
 
             if ($validator->passes()) {
                 $tag = Tag::create([
                     'name' => $request->name,
                     'slug' => Str::slug($request->name),
                     'user_id' => $user->id,
-                    'logo' => 'https://picsum.photos/200',
-                    //'logo' => isset($imageName) ? '/img/' . $imageName : null,
+                    'logo' => 'storage' . $path,
                     'color' => $request->color,
                     'bg_color' => $request->bg_color
                 ]);
@@ -109,12 +104,24 @@ class TagController extends Controller
         if ($this->isAdmin($user)) {
             $validator = Validator::make($request->all(), $this->tagValidationRules());
             if ($validator->passes()) {
+
+                if ($request->logo){
+                    $base64Banner = $request->logo;
+                    $imageData = base64_decode($base64Banner);
+
+                    $imageName = Str::random(10) . '.png'; // Générez un nom de fichier aléatoire
+                    $path = '/logos/' . $imageName;
+
+                    Storage::disk('public')->put($path, $imageData);
+                } else {
+                    $path = null;
+                }
+
                 $tag->update([
                     'name' => $request->name,
                     'slug' => Str::slug($request->name),
                     'user_id' => $user->id,
-                    'logo' => 'https://picsum.photos/200',
-                    //'logo' => $request->logo,
+                    'logo' => 'storage' . $path,
                     'color' => $request->color,
                     'bg_color' => $request->bg_color
                 ]);

@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
@@ -19,29 +20,24 @@ class RegisterController extends Controller
     {
         $validator = Validator::make($request->all(), $this->userValidatedRules());
 
-/*        // récupération de l'image et enregistrement dans le dossier public/img
-        if ($request->avatar) {
-            $avatar = $request->avatar;
-            $avatar = str_replace('data:image/png;base64,', '', $avatar);
-            $avatar = str_replace(' ', '+', $avatar);
-            $imageName = Str::random(10) . '.' . 'png';
+        if ($request->avatar){
+            $base64Banner = $request->avatar;
+            $imageData = base64_decode($base64Banner);
 
-            // création du dossier img s'il n'existe pas
-            if (!file_exists(public_path().'/img')){
-                mkdir(public_path().'/img');
-            }
+            $imageName = Str::random(10) . '.png'; // Générez un nom de fichier aléatoire
+            $path = '/avatars/' . $imageName;
 
-            \File::put(public_path() . '/img/Avatar' . $imageName, base64_decode($avatar));
-        }*/
-
+            Storage::disk('public')->put($path, $imageData);
+        } else {
+            $path = null;
+        }
             if ($validator->passes()) {
                 // Create New Writer
                 $user = User::create([
                     'lastname' => $request->lastname,
                     'firstname' => $request->firstname,
                     'pseudo' => $request->pseudo ?? null,
-                    'avatar' => 'https://picsum.photos/200',
-                    //'avatar' => isset($imageName) ? '/img/' . $imageName : null,
+                    'avatar' => 'storage' . $path,
                     'email' => $request->email,
                     'password' => Hash::make($request->password)
                 ]);

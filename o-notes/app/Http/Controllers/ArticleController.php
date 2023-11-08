@@ -7,6 +7,7 @@ use App\Models\Tag;
 use Illuminate\Http\Request;
 use App\Http\Library\ApiHelpers;
 use App\Models\Article;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
@@ -60,20 +61,17 @@ class ArticleController extends Controller
         if($this->IsAdmin($user) || $this->isUser($user)) {
             $validator = Validator::make($request->all(), $this->postValidationRules());
 
-           /* if ($request->banner){
-                // récupération de l'image et enregistrement dans le dossier public/img
-                $banner = $request->banner;
-                $banner = str_replace('data:image/png;base64,', '', $banner);
-                $banner = str_replace(' ', '+', $banner);
-                $imageName = Str::random(10).'.'.'png';
+            if ($request->banner){
+                $base64Banner = $request->banner;
+                $imageData = base64_decode($base64Banner);
 
-                // création du dossier img s'il n'existe pas
-                if (!file_exists(public_path().'/img')){
-                    mkdir(public_path().'/img');
-                }
+                $imageName = Str::random(10) . '.png'; // Générez un nom de fichier aléatoire
+                $path = '/articles/' . $imageName;
 
-                \File::put(public_path(). '/img/' . $imageName, base64_decode($banner));
-            }*/
+                Storage::disk('public')->put($path, $imageData);
+            } else {
+                $path = null;
+            }
 
             if ($validator->passes()) {
                 $article = Article::create([
@@ -83,8 +81,7 @@ class ArticleController extends Controller
                     'text_content' => $request->text_content,
                     'file_content' => $request->file_content,
                     'resume' => $request->resume,
-                    'banner' => 'https://picsum.photos/200',
-                    //'banner' => isset($imageName) ? public_path().'/img/'.$imageName : null,
+                    'banner' => 'storage' . $path,
                     'user_id' => $request->user()->id,
                     'subcategory_id' => $request->subcategory_id,
                     'status' => $request->status,
@@ -100,12 +97,24 @@ class ArticleController extends Controller
                 $newTags = $request->get('newTags');
                 if ($newTags) {
                     foreach ($newTags as $newTag) {
+
+                        if ($newTag->logo){
+                            $base64Banner = $newTag->logo;
+                            $imageData = base64_decode($base64Banner);
+
+                            $imageName = Str::random(10) . '.png'; // Générez un nom de fichier aléatoire
+                            $path = '/logos/' . $imageName;
+
+                            Storage::disk('public')->put($path, $imageData);
+                        } else {
+                            $path = null;
+                        }
                             // Créer un nouveau tag
                             $tag = Tag::create([
                                 'name' => $newTag['name'],
                                 'slug' => Str::slug($newTag['name']),
                                 'user_id' => $request->user()->id,
-                                'logo' => $newTag['logo'],
+                                'logo' => 'storage' . $path,
                                 'color' => $newTag['color'],
                                 'bg_color' => $newTag['bg_color'],
                             ]);
@@ -113,7 +122,6 @@ class ArticleController extends Controller
                         $article->tag()->attach($tag->id);
                     }
                 }
-
                 return $this->onSuccess($article, 'Article Created');
             }
             return $this->onError(400, $validator->errors());
@@ -163,18 +171,18 @@ class ArticleController extends Controller
 
         $article = Article::find($id);
 
-/*        if (!empty($request->banner)){
-            if ($article->banner != null){
-                unlink($article->banner);
-            }
+        if ($request->banner != null){
 
-            $banner = $request->banner;
-            $banner = str_replace('data:image/png;base64,', '', $banner);
-            $banner = str_replace(' ', '+', $banner);
-            $imageName = Str::random(10).'.'.'png';
+            $base64Banner = $request->banner;
+            $imageData = base64_decode($base64Banner);
 
-            \File::put(public_path(). '/img/' . $imageName, base64_decode($banner));
-        }*/
+            $imageName = Str::random(10) . '.png'; // Générez un nom de fichier aléatoire
+            $path = '/articles/' . $imageName;
+
+            Storage::disk('public')->put($path, $imageData);
+        } else {
+            $path = null;
+        }
 
         // Valider les données de la requête
         $validator = Validator::make($request->all(), $this->postValidationRules());
@@ -188,8 +196,7 @@ class ArticleController extends Controller
                 'text_content' => $request->text_content,
                 'file_content' => $request->file_content,
                 'resume' => $request->resume,
-                'banner' => 'https://picsum.photos/200',
-                //'banner' => isset($imageName) ? public_path().'/img/'.$imageName : $article->banner,
+                'banner' => 'storage' . $path,
                 'subcategory_id' => $request->subcategory_id,
                 'tags' => $request->tags,
                 'status' => $request->status,
@@ -204,13 +211,22 @@ class ArticleController extends Controller
             $newTags = $request->get('newTags');
             if ($newTags) {
                 foreach ($newTags as $newTag) {
-                    // Créer un nouveau tag
+                    if ($newTag['logo'] != null){
+                        $base64Banner = $newTag['logo'];
+                        $imageData = base64_decode($base64Banner);
+
+                        $imageName = Str::random(10) . '.png'; // Générez un nom de fichier aléatoire
+                        $path = '/logos/' . $imageName;
+
+                        Storage::disk('public')->put($path, $imageData);
+                    } else {
+                        $path = null;
+                    }
                     $tag = Tag::create([
                         'name' => $newTag['name'],
                         'slug' => Str::slug($newTag['name']),
                         'user_id' => $request->user()->id,
-                        'logo' => 'https://picsum.photos/200',
-                        //'logo' => $newTag['logo'],
+                        'logo' => 'storage' . $path,
                         'color' => $newTag['color'],
                         'bg_color' => $newTag['bg_color'],
                     ]);
@@ -218,7 +234,6 @@ class ArticleController extends Controller
                     $article->tag()->attach($tag->id);
                 }
             }
-
             // Enregistrer les modifications
             $article->save();
 
